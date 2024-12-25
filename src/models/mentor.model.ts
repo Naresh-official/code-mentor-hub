@@ -38,7 +38,7 @@ const mentorSchema: Schema = new Schema(
 	{ timestamps: true }
 );
 
-const Mentor: Model<IMentor> =
-	mongoose.models.Mentor || mongoose.model<IMentor>("Mentor", mentorSchema);
+const MentorModel: Model<IMentor> =
+	mongoose.models.MentorModel || mongoose.model<IMentor>("MentorModel", mentorSchema);
 
-export default Mentor;
+export default MentorModel;

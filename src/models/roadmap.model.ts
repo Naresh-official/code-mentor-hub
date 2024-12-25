@@ -36,8 +36,8 @@ const roadmapSchema = new Schema<IRoadmap>(
 	{ timestamps: true }
 );
 
-const Roadmap: Model<IRoadmap> =
-	mongoose.models.Roadmap ||
-	mongoose.model<IRoadmap>("Roadmap", roadmapSchema);
+const RoadmapModel: Model<IRoadmap> =
+	mongoose.models.RoadmapModel ||
+	mongoose.model<IRoadmap>("RoadmapModel", roadmapSchema);
 
-export default Roadmap;
+export default RoadmapModel;

@@ -13,7 +13,7 @@ const analyticsSchema = new Schema<IAnalytics>({
 	timestamp: { type: Date, default: Date.now },
 });
 
-const Analytics: Model<IAnalytics> =
-	models.Analytics || model<IAnalytics>("Analytics", analyticsSchema);
+const AnalyticsModel: Model<IAnalytics> =
+	models.AnalyticsModel || model<IAnalytics>("AnalyticsModel", analyticsSchema);
 
-export default Analytics;
+export default AnalyticsModel;

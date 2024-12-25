@@ -52,7 +52,7 @@ const postSchema = new Schema<IPost>(
 	{ timestamps: true }
 );
 
-const Post: Model<IPost> =
-	mongoose.models.Post || model<IPost>("Post", postSchema);
+const PostModel: Model<IPost> =
+	mongoose.models.PostModel || model<IPost>("PostModel", postSchema);
 
-export default Post;
+export default PostModel;

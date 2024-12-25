@@ -13,7 +13,7 @@ const adminSchema = new Schema<IAdmin>({
 	permissions: [{ type: String, required: true }],
 });
 
-const Admin: Model<IAdmin> =
-	mongoose.models.Admin || model<IAdmin>("Admin", adminSchema);
+const AdminModel: Model<IAdmin> =
+	mongoose.models.AdminModel || model<IAdmin>("AdminModel", adminSchema);
 
-export default Admin;
+export default AdminModel;

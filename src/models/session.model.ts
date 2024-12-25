@@ -33,8 +33,8 @@ const sessionSchema = new Schema<ISession>({
 	createdAt: { type: Date, default: Date.now },
 });
 
-const Session: Model<ISession> =
-	mongoose.models.Session ||
-	mongoose.model<ISession>("Session", sessionSchema);
+const SessionModel: Model<ISession> =
+	mongoose.models.SessionModel ||
+	mongoose.model<ISession>("SessionModel", sessionSchema);
 
-export default Session;
+export default SessionModel;

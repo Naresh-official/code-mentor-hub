@@ -25,7 +25,7 @@ const reviewSchema = new Schema<IReview>({
 	createdAt: { type: Date, default: Date.now },
 });
 
-const Review: Model<IReview> =
-	mongoose.models.Review || mongoose.model<IReview>("Review", reviewSchema);
+const ReviewModel: Model<IReview> =
+	mongoose.models.ReviewModel || mongoose.model<IReview>("ReviewModel", reviewSchema);
 
-export default Review;
+export default ReviewModel;
