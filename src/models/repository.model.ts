@@ -1,6 +1,6 @@
 import mongoose, { Document, ObjectId, Model, Schema } from "mongoose";
 export interface IRepository extends Document {
-	id: string;
+	_id: ObjectId;
 	userId: ObjectId;
 	repoName: string;
 	repoUrl: string;
@@ -15,10 +15,6 @@ export interface IRepository extends Document {
 
 const repositorySchema = new Schema<IRepository>(
 	{
-		id: {
-			type: String,
-			required: true,
-		},
 		userId: {
 			type: Schema.Types.ObjectId,
 			ref: "User",
