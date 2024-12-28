@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Github, Mail, Lock, ArrowRight, Loader2 } from "lucide-react";
+import { ArrowRight, Loader2 } from "lucide-react";
+import { LuGithub } from "react-icons/lu";
+import { FaGoogle } from "react-icons/fa";
 import Link from "next/link";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -16,6 +17,10 @@ import {
 	CardTitle,
 	CardFooter,
 } from "@/components/ui/card";
+import { handleError } from "@/utils/errorhandler";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { redirect, useRouter } from "next/navigation";
+import { signIn, useSession } from "next-auth/react";
 
 export default function LoginPage() {
 	const [isLoading, setIsLoading] = useState(false);
@@ -23,14 +28,52 @@ export default function LoginPage() {
 		usernameOrEmail: "",
 		password: "",
 	});
+	const [error, setError] = useState<string | null>(null);
+	const router = useRouter();
+	const { data: sessionData } = useSession();
 
 	const handleLogin = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setIsLoading(true);
-		// Simulate login process
-		await new Promise((resolve) => setTimeout(resolve, 2000));
-		setIsLoading(false);
-		// Handle login logic here
+		try {
+			const result = await signIn("credentials", {
+				emailOrUsername: credentials.usernameOrEmail,
+				password: credentials.password,
+				redirect: false,
+			});
+
+			if (result?.error) {
+				setError(result.error);
+			} else {
+				setCredentials({
+					usernameOrEmail: "",
+					password: "",
+				});
+				setError(null);
+				router.push("/dashboard");
+			}
+		} catch (error: unknown) {
+			console.error(error);
+			handleError(error);
+		} finally {
+			setIsLoading(false);
+		}
+	};
+
+	const handleSocialSignIn = async (provider: string) => {
+		setIsLoading(true);
+		try {
+			if (sessionData && sessionData.user) {
+				throw new Error("You are already signed in. Please sign out.");
+			}
+			await signIn(provider, {
+				callbackUrl: "/dashboard",
+			});
+		} catch (error: unknown) {
+			setError(handleError(error));
+		} finally {
+			setIsLoading(false);
+		}
 	};
 
 	return (
@@ -108,6 +151,12 @@ export default function LoginPage() {
 								)}
 							</Button>
 						</form>
+						{error && (
+							<Alert className="mt-6 w-full text-red-500 border-2 border-red-600">
+								<AlertTitle>Error while signing up</AlertTitle>
+								<AlertDescription>{error}</AlertDescription>
+							</Alert>
+						)}
 						<div className="mt-6">
 							<div className="relative">
 								<div className="absolute inset-0 flex items-center">
@@ -121,17 +170,19 @@ export default function LoginPage() {
 							</div>
 							<div className="mt-6 grid grid-cols-2 gap-4">
 								<Button
+									onClick={() => handleSocialSignIn("github")}
 									variant="outline"
 									className="hover-lift"
 								>
-									<Github className="mr-2 h-4 w-4" />
-									GitHub
+									<LuGithub className="mr-2 h-4 w-4" />
+									Github
 								</Button>
 								<Button
+									onClick={() => handleSocialSignIn("google")}
 									variant="outline"
 									className="hover-lift"
 								>
-									<Mail className="mr-2 h-4 w-4" />
+									<FaGoogle className="mr-2 h-4 w-4" />
 									Google
 								</Button>
 							</div>

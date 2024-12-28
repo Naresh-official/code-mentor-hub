@@ -82,7 +82,7 @@ export default function Home() {
 										CodeMentorHub
 									</span>
 								</h1>
-								<p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
+								<p className="mx-auto max-w-[700px] h-14 text-muted-foreground md:text-xl">
 									<TypingEffect text="Empowering developers with AI-driven insights and community support" />
 								</p>
 							</motion.div>

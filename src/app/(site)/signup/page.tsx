@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Github, Mail, ArrowRight, Loader2 } from "lucide-react";
+import { ArrowRight, Loader2 } from "lucide-react";
+import { FaGoogle } from "react-icons/fa";
+import { LuGithub } from "react-icons/lu";
 import Link from "next/link";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -17,6 +18,11 @@ import {
 	CardTitle,
 	CardFooter,
 } from "@/components/ui/card";
+import { signupSchema } from "@/schemas/signupSchema";
+import axios from "axios";
+import { handleError } from "@/utils/errorhandler";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { useRouter } from "next/navigation";
 
 interface SignupForm {
 	name: string;
@@ -29,6 +35,7 @@ interface SignupForm {
 
 export default function SignupPage() {
 	const [isLoading, setIsLoading] = useState(false);
+	const [error, setError] = useState<string | null>(null);
 	const [formData, setFormData] = useState<SignupForm>({
 		name: "",
 		username: "",
@@ -37,15 +44,24 @@ export default function SignupPage() {
 		avatarUrl: "",
 		bio: "",
 	});
+	const router = useRouter();
 
 	const handleSignup = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setIsLoading(true);
-		// Simulate signup process
-		await new Promise((resolve) => setTimeout(resolve, 2000));
-		setIsLoading(false);
-		// Handle signup logic here
-		console.log(formData);
+		try {
+			console.log(formData);
+			signupSchema.parse(formData);
+			const { data } = await axios.post("api/signup", formData);
+			setError(null);
+			if (data._id) {
+				router.push("/login");
+			}
+		} catch (error: unknown) {
+			setError(handleError(error));
+		} finally {
+			setIsLoading(false);
+		}
 	};
 
 	const handleInputChange = (
@@ -88,6 +104,7 @@ export default function SignupPage() {
 									placeholder="John Doe"
 									value={formData.name}
 									onChange={handleInputChange}
+									disabled={isLoading}
 									className="transition-all duration-300 focus:ring-2 focus:ring-primary"
 									required
 								/>
@@ -102,6 +119,7 @@ export default function SignupPage() {
 									placeholder="johndoe"
 									value={formData.username}
 									onChange={handleInputChange}
+									disabled={isLoading}
 									className="transition-all duration-300 focus:ring-2 focus:ring-primary"
 								/>
 							</div>
@@ -114,6 +132,7 @@ export default function SignupPage() {
 									placeholder="john@example.com"
 									value={formData.email}
 									onChange={handleInputChange}
+									disabled={isLoading}
 									className="transition-all duration-300 focus:ring-2 focus:ring-primary"
 									required
 								/>
@@ -126,6 +145,7 @@ export default function SignupPage() {
 									type="password"
 									value={formData.password}
 									onChange={handleInputChange}
+									disabled={isLoading}
 									className="transition-all duration-300 focus:ring-2 focus:ring-primary"
 									required
 								/>
@@ -138,13 +158,14 @@ export default function SignupPage() {
 									placeholder="Tell us about yourself..."
 									value={formData.bio}
 									onChange={handleInputChange}
-									className="transition-all duration-300 focus:ring-2 focus:ring-primary"
+									disabled={isLoading}
+									className="transition-all duration-300 focus:ring-2 focus:ring-primary resize-none"
 									rows={3}
 								/>
 							</div>
 							<Button
 								type="submit"
-								className="w-full neon-button"
+								className="w-full text-black"
 								disabled={isLoading}
 							>
 								{isLoading ? (
@@ -160,6 +181,12 @@ export default function SignupPage() {
 								)}
 							</Button>
 						</form>
+						{error && (
+							<Alert className="mt-6 w-full text-red-500 border-2 border-red-600">
+								<AlertTitle>Error while signing up</AlertTitle>
+								<AlertDescription>{error}</AlertDescription>
+							</Alert>
+						)}
 						<div className="mt-6">
 							<div className="relative">
 								<div className="absolute inset-0 flex items-center">
@@ -174,16 +201,18 @@ export default function SignupPage() {
 							<div className="mt-6 grid grid-cols-2 gap-4">
 								<Button
 									variant="outline"
+									disabled={isLoading}
 									className="hover-lift"
 								>
-									<Github className="mr-2 h-4 w-4" />
+									<LuGithub className="mr-2 h-4 w-4" />
 									GitHub
 								</Button>
 								<Button
 									variant="outline"
+									disabled={isLoading}
 									className="hover-lift"
 								>
-									<Mail className="mr-2 h-4 w-4" />
+									<FaGoogle className="mr-2 h-4 w-4" />
 									Google
 								</Button>
 							</div>
