@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Loader2 } from "lucide-react";
 import { LuGithub } from "react-icons/lu";
@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/card";
 import { handleError } from "@/utils/errorhandler";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
 
 export default function LoginPage() {
@@ -31,6 +31,12 @@ export default function LoginPage() {
 	const [error, setError] = useState<string | null>(null);
 	const router = useRouter();
 	const { data: sessionData } = useSession();
+
+	useEffect(() => {
+		if (sessionData && sessionData.user) {
+			router.push("/dashboard");
+		}
+	}, [sessionData, router]);
 
 	const handleLogin = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -53,7 +59,7 @@ export default function LoginPage() {
 				router.push("/dashboard");
 			}
 		} catch (error: unknown) {
-			console.error(error);
+			console.log(error);
 			handleError(error);
 		} finally {
 			setIsLoading(false);

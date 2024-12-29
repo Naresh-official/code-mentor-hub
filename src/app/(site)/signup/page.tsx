@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Loader2 } from "lucide-react";
 import { FaGoogle } from "react-icons/fa";
@@ -23,6 +23,7 @@ import axios from "axios";
 import { handleError } from "@/utils/errorhandler";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useRouter } from "next/navigation";
+import { signIn, useSession } from "next-auth/react";
 
 interface SignupForm {
 	name: string;
@@ -45,6 +46,12 @@ export default function SignupPage() {
 		bio: "",
 	});
 	const router = useRouter();
+	const { data: sessionData } = useSession();
+	useEffect(() => {
+		if (sessionData && sessionData.user) {
+			router.push("/dashboard");
+		}
+	}, [sessionData, router]);
 
 	const handleSignup = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -69,6 +76,22 @@ export default function SignupPage() {
 	) => {
 		const { name, value } = e.target;
 		setFormData((prev) => ({ ...prev, [name]: value }));
+	};
+
+	const handleSocialSignIn = async (provider: string) => {
+		setIsLoading(true);
+		try {
+			if (sessionData && sessionData.user) {
+				throw new Error("You are already signed in. Please sign out.");
+			}
+			await signIn(provider, {
+				callbackUrl: "/dashboard",
+			});
+		} catch (error: unknown) {
+			setError(handleError(error));
+		} finally {
+			setIsLoading(false);
+		}
 	};
 
 	return (
@@ -200,16 +223,16 @@ export default function SignupPage() {
 							</div>
 							<div className="mt-6 grid grid-cols-2 gap-4">
 								<Button
+									onClick={() => handleSocialSignIn("github")}
 									variant="outline"
-									disabled={isLoading}
 									className="hover-lift"
 								>
 									<LuGithub className="mr-2 h-4 w-4" />
-									GitHub
+									Github
 								</Button>
 								<Button
+									onClick={() => handleSocialSignIn("google")}
 									variant="outline"
-									disabled={isLoading}
 									className="hover-lift"
 								>
 									<FaGoogle className="mr-2 h-4 w-4" />
