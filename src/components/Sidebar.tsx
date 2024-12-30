@@ -3,32 +3,72 @@ import {
 	Home,
 	Users,
 	BookOpen,
-	Github,
 	GroupIcon as Community,
 	Briefcase,
 	Settings,
 	LogOut,
 	Code,
 	Calendar,
+	ClipboardList,
+	UserCircle,
 } from "lucide-react";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import { useActiveTab } from "@/hooks/useActiveTab";
+import { LuGithub } from "react-icons/lu";
 
 export const Sidebar = () => {
 	const menuItems = [
-		{ icon: Home, label: "Dashboard", href: "/dashboard" },
-		{ icon: Users, label: "Mentors", href: "/dashboard/mentors" },
-		{ icon: BookOpen, label: "Roadmap", href: "/dashboard/roadmap" },
 		{
-			icon: Github,
+			icon: Home,
+			label: "Dashboard",
+			href: "/dashboard",
+		},
+		{
+			icon: Users,
+			label: "Mentors",
+			href: "/dashboard/mentors",
+		},
+		{
+			icon: BookOpen,
+			label: "Roadmap",
+			href: "/dashboard/roadmap",
+		},
+		{
+			icon: LuGithub,
 			label: "Repositories",
 			href: "/dashboard/repositories",
 		},
-		{ icon: Community, label: "Community", href: "/dashboard/community" },
-		{ icon: Briefcase, label: "Career Tools", href: "/dashboard/career" },
-		{ icon: Calendar, label: "Sessions", href: "/dashboard/sessions" },
-		{ icon: Settings, label: "Settings", href: "/dashboard/settings" },
+		{
+			icon: ClipboardList,
+			label: "AI Code Reviews",
+			href: "/dashboard/code-reviews",
+		},
+		{
+			icon: Community,
+			label: "Community",
+			href: "/dashboard/community",
+		},
+		{
+			icon: Briefcase,
+			label: "Career Tools",
+			href: "/dashboard/career",
+		},
+		{
+			icon: Calendar,
+			label: "Sessions",
+			href: "/dashboard/sessions",
+		},
+		{
+			icon: Settings,
+			label: "Settings",
+			href: "/dashboard/settings",
+		},
+		{
+			icon: UserCircle,
+			label: "Profile",
+			href: "/dashboard/profile",
+		},
 	];
 
 	const { isActive } = useActiveTab();
