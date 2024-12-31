@@ -335,8 +335,8 @@ export default function RoadmapPage() {
 		<div className="container w-full min-h-[calc(100vh-72px)] overflow-y-auto px-4 py-8">
 			<motion.div
 				layout
-				initial={{ opacity: 0, y: 20, scale: 0.8 }}
-				animate={{ opacity: 1, y: 0, scale: 1 }}
+				initial={{ opacity: 0, y: 20 }}
+				animate={{ opacity: 1, y: 0 }}
 				transition={{ duration: 0.5 }}
 			>
 				<Header />
